@@ -4,73 +4,82 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Semester;
+use App\Models\Year;
+use App\Models\Level;
 use Illuminate\Http\Request;
 
 class SemesterController extends Controller
 {
     public function index()
     {
-        $semesters = Semester::latest()->paginate(10);
+        $semesters = Semester::with(['year', 'level'])->latest()->paginate(10);
         return view('admin.semesters.index', compact('semesters'));
     }
 
     public function create()
     {
-        return view('admin.semesters.create');
+        $years = Year::orderBy('year', 'desc')->get();
+        $levels = Level::orderBy('name')->get();
+        return view('admin.semesters.create', compact('years', 'levels'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'year' => 'required|digits:4|integer|min:1901|max:2155',
-            'season' => 'required|in:Fall,Spring,Summer',
+            'year_id' => 'required|exists:years,id',
+            'level_id' => 'required|exists:levels,id',
             'semester_number' => 'required|integer|min:1|max:3',
             'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after:start_date'
         ]);
-        $validated['semester_number'] = (int)$validated['semester_number'];
-        $exists = Semester::where('year', $validated['year'])
+
+        $exists = Semester::where('year_id', $validated['year_id'])
             ->where('semester_number', $validated['semester_number'])
             ->exists();
-        if($exists) {
-            return back()->withErrors(['semester_number' => 'This semester number already exists for selected year']);
+
+        if ($exists) {
+            toastr()->error('رقم الفصل الدراسي هذا موجود بالفعل للسنة المحددة.');
+            return back()->withErrors(['semester_number' => 'رقم الفصل الدراسي هذا موجود بالفعل للسنة المحددة.']);
         }
+
         Semester::create($validated);
-        return redirect()->route('admin.semesters.index')
-            ->with('success', 'Semester created successfully');
+        toastr()->success('تم إضافة الفصل الدراسي بنجاح');
+        return redirect()->route('admin.semesters.index');
     }
 
     public function edit(Semester $semester)
     {
-        return view('admin.semesters.edit', compact('semester'));
+        $years = Year::orderBy('year', 'desc')->get();
+        $levels = Level::orderBy('name')->get();
+        return view('admin.semesters.edit', compact('semester', 'years', 'levels'));
     }
 
     public function update(Request $request, Semester $semester)
     {
         $validated = $request->validate([
-            'year' => 'required|digits:4|integer|min:1901|max:2155',
-            'season' => 'required|in:Fall,Spring,Summer',
+            'year_id' => 'required|exists:years,id',
+            'level_id' => 'required|exists:levels,id',
             'semester_number' => 'required|integer|min:1|max:3',
             'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after:start_date'
         ]);
-        $exists = Semester::where('year', $validated['year'])
+        $exists = Semester::where('year_id', $validated['year_id'])
             ->where('semester_number', $validated['semester_number'])
             ->where('id', '!=', $semester->id)
             ->exists();
-        if($exists) {
-            return back()->withErrors(['semester_number' => 'This semester number already exists for selected year']);
+        if ($exists) {
+            toastr()->error('رقم الفصل الدراسي هذا موجود بالفعل للسنة المحددة.');
+            return back()->withErrors(['semester_number' => 'رقم الفصل الدراسي هذا موجود بالفعل للسنة المحددة.']);
         }
         $semester->update($validated);
-
-        return redirect()->route('admin.semesters.index')
-            ->with('success', 'Semester updated successfully');
+        toastr()->success('تم تحديث الفصل الدراسي بنجاح');
+        return redirect()->route('admin.semesters.index');
     }
 
     public function destroy(Semester $semester)
     {
         $semester->delete();
-        return redirect()->route('admin.semesters.index')
-            ->with('success', 'Semester deleted successfully');
+        toastr()->success('تم حذف الفصل الدراسي بنجاح');
+        return redirect()->route('admin.semesters.index');
     }
 }

@@ -12,25 +12,19 @@
     <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card">
-                    <!-- إضافة هذا الجزء فوق الجدول -->
-                    @if(!$group & !$semester & !$department)
-                        <div class="alert alert-info">
-                            <i class="fa fa-info-circle"></i>
-                            الرجاء تحديد المجموعة والفصل الدراسي لعرض الجدول الزمني.
-                        </div>
-                    @else
+
                         <div class="card-body">
                             <form id="timetableFilter">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Semester</label>
-                                            <select name="semester_id" class="form-control" required>
-                                                <option value="">Select Semester</option>
+                                            <label>السنه / الفصل الدراسي </label>
+                                            <select name="semester_id" class="form-control select2" required>
+                                                <option value=""> اختر</option>
                                                 @foreach($semesters as $s)
                                                     <option value="{{ $s->id }}"
                                                         {{ ($semester && $s->id == $semester->id) ? 'selected' : '' }}>
-                                                        {{ $s->year }} - {{ $s->season }} (Sem {{ $s->semester_number }})
+                                                        {{ optional($s->year)->year }} - {{ optional($s->level)->name }} [{{ $s->semester_number }}]
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -38,9 +32,9 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>القسم</label>
-                                            <select name="department_id" class="form-control" required>
-                                                <option value="">اختر القسم</option>
+                                            <label>الاقسام</label>
+                                            <select name="department_id" class="form-control select2" required>
+                                                <option value="">اختر </option>
                                                 @foreach($departments as $d)
                                                     <option value="{{ $d->id }}" {{ ($department && $d->id == $department->id) ? 'selected' : '' }}>
                                                         {{ $d->name }}
@@ -51,9 +45,9 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Group</label>
-                                            <select name="group_id" class="form-control" required>
-                                                <option value="">Select Group</option>
+                                            <label>المجموعات</label>
+                                            <select name="group_id" class="form-control select2" required>
+                                                <option value="">اختر </option>
                                                 @foreach($groups as $g)
                                                     <option value="{{ $g->id }}"
                                                         {{ ($group && $g->id == $group->id) ? 'selected' : '' }}>
@@ -66,37 +60,40 @@
 
 
 
-                                    <div class="col-md-2 align-self-end">
+                                    <div class="col-md-2 ">
                                         <button type="submit" class="btn btn-primary btn-block">
-                                            <i class="fa fa-refresh"></i> تحميل الجدول
+                                            <i class="fa fa-refresh"></i>
                                         </button>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                    @endif
-
                 </div>
             </div>
         </div>
     <div class="row">
         <div class="col-md-12">
             <div class="tile">
+                @if($group && $semester && $department)
                 <!-- Header Section -->
                 <div class="timetable-header text-center mb-4">
 {{--                    <h3 class="text-primary">PRINCE SULTAN MILITARY COLLEGE OF HEALTH SCIENCES DHAHRAN</h3>--}}
                     <h5>Office of the Registrar - Group Semester Schedule</h5>
                     <div class="row justify-content-center">
-                        <div class="col-md-4 text-left">
+                        <div class="col-md-5">
+                            @include('admin.course-table', ['courses' => $courses])
+
+                        </div>
+                        <div class="col-md-3">
+
+                        </div>
+                        <div class="col-md-4 timeCourde">
                             <p class="mb-0"><strong>Program:</strong> {{ $group->name ?? 'N/A' }}</p>
                             <p class="mb-0"><strong>Speciality:</strong> {{ $department->name ?? 'N/A' }}</p>
+                            <p class="mb-0"><strong>Semester:</strong> {{ optional($semester->level)->level }} {{ optional($semester->year)->year }}</p>
+                            <p class="mb-0"><strong>Duration:</strong>{{ $semester->start_date->format('m/d/Y') }} - {{ $semester->end_date->format('m/d/Y') }}</p>
                         </div>
-                        <div class="col-md-4 text-left">
-                            <p class="mb-0"><strong>Semester:</strong> {{ $semester->season }} {{ $semester->year }}</p>
-                            <p class="mb-0"><strong>Duration:</strong>
-                                {{ $semester->start_date->format('m/d/Y') }} - {{ $semester->end_date->format('m/d/Y') }}
-                            </p>
-                        </div>
+
                     </div>
                 </div>
 
@@ -166,7 +163,12 @@
                         </tbody>
                     </table>
                 </div>
-
+                @else
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle"></i>
+                            الرجاء تحديد المجموعة والفصل الدراسي لعرض الجدول الزمني.
+                        </div>
+                @endif
                 <!-- Legend -->
                 <div class="legend mt-4 p-3 border-top">
                     <h6>Legend:</h6>

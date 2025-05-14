@@ -14,12 +14,12 @@
                             <i class="fa fa-plus"></i> {{ __('إضافة فصل دراسي') }}
                         </a>
                     </div>
-                    <table class="table table-striped" id="semestersTable">
+                    <table class="table table-striped" id="sampleTable">
                         <thead>
                         <tr>
                             <th>#</th>
                             <th>{{ __('السنة') }}</th>
-                            <th>{{ __('الفصل') }}</th>
+                            <th>{{ __('المستوى') }}</th>
                             <th>{{ __('رقم الفصل') }}</th>
                             <th>{{ __('تاريخ البداية') }}</th>
                             <th>{{ __('تاريخ النهاية') }}</th>
@@ -30,8 +30,8 @@
                         @foreach ($semesters as $index=>$semester)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $semester->year }}</td>
-                                <td>{{ __($semester->season) }}</td>
+                                <td>{{ $semester->year->year }}</td>
+                                <td>{{ $semester->level->name }}</td>
                                 <td>{{ $semester->semester_number }}</td>
                                 <td>{{ $semester->start_date->format('Y-m-d') }}</td>
                                 <td>{{ $semester->end_date->format('Y-m-d') }}</td>
@@ -49,6 +49,7 @@
                             </tr>
                         @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>

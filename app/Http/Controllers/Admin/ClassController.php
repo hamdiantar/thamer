@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{ClassModel, Course, Department, Instructor, Room, Group, Period, Semester};
+use App\Models\{ClassModel, Course, Department, Instructor, Room, Group, Period, Semester, User};
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ClassController extends Controller
@@ -127,43 +128,44 @@ class ClassController extends Controller
         $department = null;
         $classes = collect();
         $periods = Period::orderBy('number')->get();
+        $instructors = [];
 
         if ($departmentId) {
             $department = Department::find($departmentId);
+            $instructors = User::where('role', 'teacher')->whereHas('departments', function ($q) use ($departmentId){
+                $q->where('department_id', $departmentId);
+            })->get();
         }
 
         if ($groupId && $semesterId) {
             $group = Group::find($groupId);
+
             $semester = Semester::find($semesterId);
 
             if ($group && $semester) {
-                $classes = ClassModel::with(['course', 'room', 'instructor', 'department'])
+
+                $classes = ClassModel::with(['course', 'room', 'department'])
                     ->where('group_id', $groupId)
                     ->where('semester_id', $semesterId)
                     ->where('department_id', $departmentId)
-                   ->get();
+                    ->get();
+
             }
+
         }
+
+        $courses = Course::where('level_id', optional($semester)->level_id)->get();
         $groups = Group::all();
         $semesters = Semester::all();
-        $courses = Course::all();
         $rooms = Room::all();
-        $instructors = Instructor::all();
+
         $departments = Department::all();
         return view('admin.timetable', compact(
-            'group',
-            'semester',
-            'classes',
-            'periods',
-            'groups',
-            'semesters',
-            'courses',
-            'rooms',
-            'instructors',
-            'departments',
-            'department',
+            'group', 'semester', 'classes', 'periods', 'groups',
+            'semesters', 'departments', 'department', 'courses', 'instructors', 'rooms'
         ));
     }
+
 
     public function updateTimeTable(Request $request)
     {
@@ -207,13 +209,10 @@ class ClassController extends Controller
             - في نفس القسم والفصل الدراسي'
                 ], 422);
             }
-
-            // إنشاء/تحديث السجل
             ClassModel::updateOrCreate(
                 ['id' => $request->id],
                 $validated
             );
-
             return response()->json([
                 'success' => true,
                 'message' => 'تم حفظ الجدول بنجاح'
@@ -222,4 +221,27 @@ class ClassController extends Controller
             dd($e->getMessage());
         }
     }
+
+    public function getCoursesAndTeachers(Request $request): JsonResponse
+    {
+        $semesterId = $request->semester_id;
+        $departmentId = $request->department_id;
+
+        if (!$semesterId || !$departmentId) {
+            return response()->json(['courses' => [], 'teachers' => []]);
+        }
+
+        // Get courses related to semester via level
+        $semester = Semester::find($semesterId);
+        $courses = Course::where('level_id', $semester->level_id)->get();
+
+        // Get teachers related to department
+        $teachers = User::where('role', 'teacher')
+            ->whereHas('departments', function ($query) use ($departmentId) {
+                $query->where('department_id', $departmentId);
+            })->get();
+
+        return response()->json(['courses' => $courses, 'teachers' => $teachers]);
+    }
+
 }

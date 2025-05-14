@@ -31,7 +31,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $course->code }}</td>
                                 <td>{{ $course->title }}</td>
-                                <td>{{ $course->level }}</td>
+                                <td>{{ $course->level ? $course->level->name : 'غير محدد' }}</td>
                                 <td>{{ $course->sch }}</td>
                                 <td>
                                     <a href="{{ route('admin.courses.edit', $course->id) }}" class="btn btn-info btn-sm">
@@ -47,6 +47,7 @@
                             </tr>
                         @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>

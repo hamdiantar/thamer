@@ -5,9 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>تسجيل الدخول</title>
-    <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('admin/css/ar.css')}}">
-    <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://fonts.googleapis.com/css?family=Cairo' rel='stylesheet'>
     <style>
@@ -58,7 +56,7 @@
             <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>{{__('Login')}}</h3>
 
             <div class="form-group">
-                <label class="control-label">{{__('البريد الإالكتروني او الرقم الوظيفي')}}</label>
+                <label class="control-label">{{__('البريد الإالكتروني')}}</label>
                 <input autocomplete="new-email" class="form-control" type="text"  autofocus name="email" value="{{ old('email') }}">
             </div>
 

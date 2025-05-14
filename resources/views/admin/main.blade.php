@@ -77,30 +77,55 @@
             </a>
         </li>
         <li>
-            <a class="app-menu__item {{isNavbarActive('my_profile')}}" href="{{route('admin.my_profile')}}">
+            <a class="app-menu__item {{isNavbarActive('my_profile')}}" href="{{route('admin.profile')}}">
                 <i class="app-menu__icon fa fa-user"></i>
                 <span class="app-menu__label">الملف الشخصى</span>
             </a>
         </li>
-
         <li>
-            <a class="app-menu__item {{isNavbarActive('courses*')}}" href="{{route('admin.courses.index')}}">
-                <i class="app-menu__icon fa fa-book"></i>
-                <span class="app-menu__label">المقررات الدراسية</span>
+            <a class="app-menu__item {{isNavbarActive('users*')}}" href="{{route('admin.users.index')}}">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">المستخدميين</span>
             </a>
         </li>
+        <li>
+            <a class="app-menu__item {{ isNavbarActive('years*') }}" href="{{ route('admin.years.index') }}">
+                <i class="app-menu__icon fa fa-calendar"></i>
+                <span class="app-menu__label">السنوات</span>
+            </a>
+        </li>
+        <li>
+            <a class="app-menu__item {{ isNavbarActive('levels*') }}" href="{{ route('admin.levels.index') }}">
+                <i class="app-menu__icon fa fa-list"></i>
+                <span class="app-menu__label">المستويات</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="app-menu__item {{isNavbarActive('semesters*')}}" href="{{route('admin.semesters.index')}}">
+                <i class="app-menu__icon fa fa-file"></i>
+                <span class="app-menu__label">الفصول الدراسية</span>
+            </a>
+        </li>
+        <li>
+            <a class="app-menu__item {{isNavbarActive('groups*')}}" href="{{route('admin.groups.index')}}">
+                <i class="app-menu__icon fa fa-users"></i>
+                <span class="app-menu__label">المجموعات الدراسية</span>
+            </a>
+        </li>
+
         <li>
             <a class="app-menu__item {{isNavbarActive('departments*')}}" href="{{route('admin.departments.index')}}">
                 <i class="app-menu__icon fa fa-building"></i>
                 <span class="app-menu__label">الأقسام</span>
             </a>
         </li>
-        <li>
-            <a class="app-menu__item {{isNavbarActive('instructors*')}}" href="{{route('admin.instructors.index')}}">
-                <i class="app-menu__icon fa fa-users"></i>
-                <span class="app-menu__label">المحاضرون</span>
-            </a>
-        </li>
+{{--        <li>--}}
+{{--            <a class="app-menu__item {{isNavbarActive('instructors*')}}" href="{{route('admin.instructors.index')}}">--}}
+{{--                <i class="app-menu__icon fa fa-users"></i>--}}
+{{--                <span class="app-menu__label">المحاضرون</span>--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
         <li>
             <a class="app-menu__item {{isNavbarActive('rooms*')}}" href="{{route('admin.rooms.index')}}">
@@ -115,17 +140,10 @@
                 <span class="app-menu__label">الفترات الزمنية</span>
             </a>
         </li>
-
         <li>
-            <a class="app-menu__item {{isNavbarActive('groups*')}}" href="{{route('admin.groups.index')}}">
-                <i class="app-menu__icon fa fa-users"></i>
-                <span class="app-menu__label">المجموعات</span>
-            </a>
-        </li>
-        <li>
-            <a class="app-menu__item {{isNavbarActive('semesters*')}}" href="{{route('admin.semesters.index')}}">
-                <i class="app-menu__icon fa fa-file"></i>
-                <span class="app-menu__label">الفصول الدراسية</span>
+            <a class="app-menu__item {{isNavbarActive('courses*')}}" href="{{route('admin.courses.index')}}">
+                <i class="app-menu__icon fa fa-book"></i>
+                <span class="app-menu__label">المواد الدراسية </span>
             </a>
         </li>
 

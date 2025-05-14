@@ -33,7 +33,7 @@ class ClassModel extends Model
 
     public function instructor()
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(User::class, 'instructor_id');
     }
 
     public function room()

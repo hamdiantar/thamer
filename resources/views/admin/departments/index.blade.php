@@ -19,6 +19,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ __('اسم القسم') }}</th>
+                            <th>{{ __('رئيس القسم') }}</th>
                             <th>{{ __('الوصف') }}</th>
                             <th>{{ __('الإجراءات') }}</th>
                         </tr>
@@ -28,6 +29,7 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $department->name }}</td>
+                                <td>{{ $department->head ? $department->head->name : 'غير معين' }}</td>
                                 <td>{{ Str::limit($department->description, 50) }}</td>
                                 <td>
                                     <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-info btn-sm">
@@ -43,6 +45,7 @@
                             </tr>
                         @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>

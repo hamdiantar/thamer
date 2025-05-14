@@ -48,32 +48,23 @@ class MainAdminController extends Controller
 
     public function profile()
     {
-        $user = Auth::user();
-        return view('admin.profile', compact('user'));
+        $profile = Auth::user();
+        return view('admin.profile', compact('profile'));
     }
 
-    public function updateProfile(Request $request): RedirectResponse
+    public function updateProfile(Request $request)
     {
         $user = Auth::user();
-
         $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'password' => 'nullable|min:8|confirmed',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6|confirmed',
         ]);
-
-        $data = [
+        $user->update([
             'name' => $request->name,
             'email' => $request->email,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
-        $user->update($data);
-
-        toastr()->success(__('Profile updated successfully'));
-        return redirect()->route('admin.profile');
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+        return redirect()->route('admin.profile')->with('success', 'تم تحديث الملف الشخصي بنجاح');
     }
 }

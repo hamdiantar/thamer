@@ -1,33 +1,35 @@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="form-group">
             <label>{{ __('السنة') }}</label>
-            <input type="number" name="year" class="form-control"
-                   value="{{ old('year', $semester->year ?? '') }}"
-                   min="1901" max="2155" required>
-            @error('year')<div class="text-danger">{{ $message }}</div>@enderror
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>{{ __('الفصل') }}</label>
-            <select name="season" class="form-control" required>
-                <option value="Fall" {{ (old('season', $semester->season ?? '') == 'Fall') ? 'selected' : '' }}>
-                    {{ __('الخريف') }}
-                </option>
-                <option value="Spring" {{ (old('season', $semester->season ?? '') == 'Spring') ? 'selected' : '' }}>
-                    {{ __('الربيع') }}
-                </option>
-                <option value="Summer" {{ (old('season', $semester->season ?? '') == 'Summer') ? 'selected' : '' }}>
-                    {{ __('الصيف') }}
-                </option>
+            <select name="year_id" class="form-control select2" required>
+                <option value="">{{ __('اختر السنة') }}</option>
+                @foreach ($years as $year)
+                    <option value="{{ $year->id }}" {{ old('year_id', $semester->year_id ?? '') == $year->id ? 'selected' : '' }}>
+                        {{ $year->year }}
+                    </option>
+                @endforeach
             </select>
-            @error('season')<div class="text-danger">{{ $message }}</div>@enderror
+            @error('year_id')<div class="text-danger">{{ $message }}</div>@enderror
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>{{ __('المستوى') }}</label>
+            <select name="level_id" class="form-control select2" required>
+                <option value="">{{ __('اختر المستوى') }}</option>
+                @foreach ($levels as $level)
+                    <option value="{{ $level->id }}" {{ old('level_id', $semester->level_id ?? '') == $level->id ? 'selected' : '' }}>
+                        {{ $level->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('level_id')<div class="text-danger">{{ $message }}</div>@enderror
+        </div>
+    </div>
+
+    <div class="col-md-6">
         <div class="form-group">
             <label>{{ __('رقم الفصل') }}</label>
             <input type="number" name="semester_number" class="form-control"
@@ -41,7 +43,7 @@
         <div class="form-group">
             <label>{{ __('تاريخ البداية') }}</label>
             <input type="date" name="start_date" class="form-control"
-                   value="{{ old('start_date', isset($semester) ? $semester->start_date->format('Y-m-d') : '') }}" required>
+                   value="{{ old('start_date', $semester->start_date ?? '') }}" required>
             @error('start_date')<div class="text-danger">{{ $message }}</div>@enderror
         </div>
     </div>
@@ -50,7 +52,7 @@
         <div class="form-group">
             <label>{{ __('تاريخ النهاية') }}</label>
             <input type="date" name="end_date" class="form-control"
-                   value="{{ old('end_date', isset($semester) ? $semester->end_date->format('Y-m-d') : '') }}" required>
+                   value="{{ old('end_date', $semester->end_date ?? '') }}" required>
             @error('end_date')<div class="text-danger">{{ $message }}</div>@enderror
         </div>
     </div>
