@@ -107,7 +107,7 @@
                                                 <div class="text-center text-muted">Break</div>
                                             @else
                                                 @foreach($classes->where('day', $day)->where('period_id', $period->id) as $class)
-                                                    <div class="course-info p-2">
+                                                    <div class="course-info p-2">fffffffffffff
                                                         <strong class="d-block text-primary">{{ $class->course->code }}</strong>
                                                         <small class="text-muted">{{ $class->course->title }}</small>
                                                         <div class="details mt-1">

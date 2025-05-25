@@ -125,9 +125,11 @@
                                         data-toggle="modal"
                                         data-target="#editModal"
                                         style="min-height: 80px; {{ $period->is_break ? 'background: #fff3cd;' : '' }}">
+                                      
                                         @if($period->is_break)
                                             <div class="text-center text-muted">Break</div>
                                         @else
+                                      
                                             @foreach($classes->where('day', $day)->where('period_id', $period->id) as $class)
                                                 <div class="course-info p-2" data-class="{{$class->id}}">
                                                     <strong class="d-block text-primary">{{ $class->course->code }}</strong>

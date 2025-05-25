@@ -133,7 +133,7 @@ class ClassController extends Controller
         if ($departmentId) {
             $department = Department::find($departmentId);
             $instructors = User::where('role', 'teacher')->whereHas('departments', function ($q) use ($departmentId){
-                $q->where('department_id', $departmentId);
+                // $q->where('department_id', $departmentId);
             })->get();
         }
 
@@ -174,7 +174,7 @@ class ClassController extends Controller
             $validated = $request->validate([
                 'id' => 'nullable|exists:classes,id',
                 'course_id' => 'required|exists:courses,id',
-                'instructor_id' => 'required|exists:instructors,id',
+                'instructor_id' => 'required',
                 'room_id' => 'required|exists:rooms,id',
                 'group_id' => 'required|exists:groups,id',
                 'period_id' => 'required|exists:periods,id',
@@ -195,6 +195,7 @@ class ClassController extends Controller
                     ->orWhere('instructor_id', $validated['instructor_id'])
                     ->orWhere('group_id', $validated['group_id']);
             });
+          
 
             // استثناء الحصة الحالية في حالة التحديث
             if (isset($validated['id'])) {
@@ -209,6 +210,7 @@ class ClassController extends Controller
             - في نفس القسم والفصل الدراسي'
                 ], 422);
             }
+            
             ClassModel::updateOrCreate(
                 ['id' => $request->id],
                 $validated
