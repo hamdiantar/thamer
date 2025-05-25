@@ -305,7 +305,8 @@
             $('#classForm').submit(function(e) {
                 e.preventDefault();
                 const $btn = $(this).find('button[type="submit"]');
-                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> جاري الحفظ...');
+    const originalText = $btn.html(); // حفظ النص الأصلي للزر
+    $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> جاري الحفظ...');
                 $.ajax({
                     url: "{{ route('admin.classes.store2') }}",
                     method: "POST",
@@ -318,6 +319,7 @@
                     },
                     error: function(xhr) {
                         alert(xhr.responseJSON.error || 'حدث خطأ غير متوقع');
+                          $btn.prop('disabled', false).html(originalText); // إعادة الزر إلى حالته الأصلية
                     }
                 });
             });
